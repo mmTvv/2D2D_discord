@@ -1,33 +1,36 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from utils import *
+import random
+import asyncio
+from utils import Tab
 
-class tab(commands.Cog):
+class TabCog(commands.Cog):
     def __init__(self, bot):
+        self.tab = Tab()
         self.bot = bot
-        login()
 
-    @app_commands.command(name="tab", description="get tab data")
-    async def util(self, interaction: discord.Interaction):
-        try:
-            header, players, footer = get_tab_data()
+    @app_commands.command(name="tab", description="Get tab data")
+    async def tab(self, interaction: discord.Interaction):
+        # Деферируем ответ для указания, что работа в процессе
+        await interaction.response.defer()
 
-            header = format_text(header)
-            footer = format_text(footer)
-            players = format_nick(players)
+        # Обрабатываем данные и создаем изображение
+        header, players, footer = self.tab.get_tab_data()
+        header = self.tab.format_text(header)
+        footer = self.tab.format_text(footer)
+        players = self.tab.format_nick(players)
+        self.tab.draw_colored_text(
+            header, footer, players, "minecraft.ttf", "fonts/tab.png",
+            background_image_path=f'fonts/{random.randint(1,76)}.png'
+        )
 
-            draw_colored_text(header, footer, players, "minecraft.ttf", "output_image.png", background_image_path="1.png")
-        except:
-            login()
-            header, players, footer = get_tab_data()
+        # Ждем завершения обработки изображения
+        await asyncio.sleep(1.5)
 
-            header = format_text(header)
-            footer = format_text(footer)
-            players = format_nick(players)
-            
-            draw_colored_text(header, footer, players, "minecraft.ttf", "output_image.png", background_image_path="1.png")
+        # Отправляем изображение в followup
+        with open("fonts/tab.png", "rb") as f:
+            await interaction.followup.send( file=discord.File(f, filename="tab.png"))
 
-# Регистрация Cog
 async def setup(bot):
-    await bot.add_cog(tab(bot))
+    await bot.add_cog(TabCog(bot))
