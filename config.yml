@@ -3,27 +3,8 @@ bot:
   prefix: "!"              # Префикс для текстовых команд (если используются)
 
 server:
-  guild_id: "1160613896286130287"  # ID сервера Discord
-  vip_role_id: ""
-  vip_plus_role_id: ""
-  vip_plus_plus_role_ip
-channels:
-  log_channel: "LOG_CHANNEL_ID"  # ID канала для логов
-  general_channel: "GENERAL_CHANNEL_ID"  # ID общего канала
-
-roles:
-  admin_role: "ADMIN_ROLE_ID"  # ID роли администратора
-  mod_role: "MOD_ROLE_ID"      # ID роли модератора
-
-settings:
-  max_players: 100            # Максимальное количество игроков
-  default_language: "en"      # Язык по умолчанию
-  welcome_message: "Welcome to the server!"  # Сообщение приветствия
-  
-# Токен от API, если используешь какие-то внешние сервисы
-api_keys:
-  some_service: "API_KEY_HERE"
-
-# Различные флаги для отладки или активации дополнительных функций
-debug_mode: false              # Включить режим отладки (true/false)
-enable_logging: true           # Включить логирование событий
+  guild_id: 1160613896286130287  # ID сервера Discord
+  adept_role_id: 1274711574229291089
+  vip_role_id: 0
+  mvp_role_id: 0
+  apex_role_ip: 0
