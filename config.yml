@@ -1,10 +1,23 @@
 bot:
-  token: "'MTI3NzQ0MzczODMxNDA4NDQ1Ng.G8ieaI.VevEyQ-5HGeSIsPCOhmVzotnCXe_i5dqPKMmPo'"  # Токен для аутентификации бота
+  token: "MTI3NzQ0MzczODMxNDA4NDQ1Ng.G8ieaI.VevEyQ-5HGeSIsPCOhmVzotnCXe_i5dqPKMmPo"  # Токен для аутентификации бота
   prefix: "!"              # Префикс для текстовых команд (если используются)
 
 server:
-  guild_id: 1160613896286130287  # ID сервера Discord
+  guild_id: 1160613896286130287
+  members_view_channel: 1277042047181783162
+  online_view_channel: 1276727379280003112
+  welcome: 1276727516249329685
+  main: 1160613896286130290
+  server-chat: 1277040742065508442
+  me-news: 0
+  news-en:
+  news-ru:
+  
+roles:
   adept_role_id: 1274711574229291089
   vip_role_id: 0
   mvp_role_id: 0
   apex_role_ip: 0
+
+ai:
+  groq_token: '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'

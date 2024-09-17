@@ -3,11 +3,11 @@ from discord import app_commands
 from discord.ext import commands
 import random
 import asyncio
-from utils import Tab
+from utils import *
 
 class TabCog(commands.Cog):
     def __init__(self, bot):
-        self.tab = Tab()
+        #self.tab = Tab()
         self.bot = bot
 
     @app_commands.command(name="tab", description="Get tab data")

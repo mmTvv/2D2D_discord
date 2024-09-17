@@ -1,0 +1,4 @@
+{
+    "command_hello": "Hello!",
+    "command_hello_description": "Says hello to the user."
+}

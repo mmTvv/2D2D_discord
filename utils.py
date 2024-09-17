@@ -2,8 +2,22 @@ from PIL import Image, ImageDraw, ImageFont
 import json
 from time import sleep
 from javascript import require, On, Once
+import yaml
 
 # Карты стилей и цветов
+
+'''
+# Загрузка локализаций из файла
+def load_localizations():
+    with open("lang/en.json", "r", encoding="utf-8") as f:
+        en_locale = json.load(f)
+    with open("lang/ru.json", "r", encoding="utf-8") as f:
+        ru_locale = json.load(f)
+    return {"en": en_locale, "ru": ru_locale}
+
+localizations = load_localizations()'''
+
+
 
 with open("config.yml", "r") as config_file:
     config = yaml.safe_load(config_file)

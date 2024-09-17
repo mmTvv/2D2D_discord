@@ -6,6 +6,8 @@ from utils import *
 # Инициализация бота
 intents = discord.Intents.default()
 intents.message_content = True
+intents.messages = True
+intents.guilds = True
 intents.members = True  # Доступ к списку участников
 intents.presences = True  # Доступ к состоянию присутствия и пользовательскому статусу
 bot = commands.Bot(command_prefix=config['bot']['prefix'], intents=intents)

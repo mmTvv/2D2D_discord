@@ -1,0 +1,4 @@
+{
+    "command_hello": "Привет!",
+    "command_hello_description": "Приветствует пользователя."
+}

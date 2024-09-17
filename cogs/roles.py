@@ -1,27 +1,24 @@
 import discord
-from discord import app_commands
-from discord.ext import commands
+from discord.ext import tasks, commands
 from utils import *
 
 class roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.check_status.start()
 
     @tasks.loop(seconds=20)
     async def check_status(self):
-        guild = client.get_guild(config['server']['guild_id'])
+        guild = self.bot.get_guild(config['server']['guild_id'])
         if guild is None:
             print("Сервер не найден. Проверьте GUILD_ID.")
             return
 
-        role = guild.get_role(config['server']['adept_role_id'])
+        role = guild.get_role(config['roles']['adept_role_id'])
         if role is None:
             print("Роль не найдена. Проверьте ROLE_ID.")
             return
         for member in guild.members:
-            if member.status == discord.Status.offline:
-                continue  # Пропускаем пользователей, которые не онлайн
-            # Ищем пользовательский статус среди активностей
             custom_status = next((activity for activity in member.activities if isinstance(activity, discord.CustomActivity)), None)
 
             if custom_status and custom_status.name and "2d2d.org" in custom_status.name:
@@ -31,6 +28,6 @@ class roles(commands.Cog):
             else:
                 if role in member.roles:
                     await member.remove_roles(role)
-                    
+
 async def setup(bot):
     await bot.add_cog(roles(bot))
