@@ -10,7 +10,7 @@ class info(commands.Cog):
         self.info.start()
         self.server = JavaServer.lookup("msk.2d2d.org:25565")
 
-    @tasks.loop(seconds=30)
+    @tasks.loop(minutes=2)
     async def info(self): #uptime
         online = self.bot.get_channel(config['server']['online_view_channel'])
         members = self.bot.get_channel(config['server']['members_view_channel'])

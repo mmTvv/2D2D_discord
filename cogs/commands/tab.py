@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 import random
 import asyncio
-from utils import *
+from utils import Tab
 
 class TabCog(commands.Cog):
     def __init__(self, bot):
@@ -12,7 +12,7 @@ class TabCog(commands.Cog):
 
     @app_commands.command(name="tab", description="Get tab data")
     async def tab(self, interaction: discord.Interaction):
-        # Деферируем ответ для указания, что работа в процессе
+        # Отправляем первоначальное сообщение и сохраняем объект сообщения
         await interaction.response.defer()
 
         # Обрабатываем данные и создаем изображение
@@ -28,9 +28,11 @@ class TabCog(commands.Cog):
         # Ждем завершения обработки изображения
         await asyncio.sleep(1.5)
 
-        # Отправляем изображение в followup
-        with open("fonts/tab.png", "rb") as f:
-            await interaction.followup.send( file=discord.File(f, filename="tab.png"))
+        with open('fonts/tab.png', 'rb') as f:
+            picture = discord.File(f)
+
+        # Редактируем первоначальное сообщение и добавляем фото
+        await interaction.followup.send( file=picture)
 
 async def setup(bot):
     await bot.add_cog(TabCog(bot))

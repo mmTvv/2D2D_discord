@@ -4,12 +4,7 @@ import os
 from utils import *
 
 # Инициализация бота
-intents = discord.Intents.default()
-intents.message_content = True
-intents.messages = True
-intents.guilds = True
-intents.members = True  # Доступ к списку участников
-intents.presences = True  # Доступ к состоянию присутствия и пользовательскому статусу
+intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=config['bot']['prefix'], intents=intents)
 
 # Функция для рекурсивной загрузки cogs из файлов и папок
@@ -26,7 +21,9 @@ async def load_cogs():
 # Событие при готовности бота
 @bot.event
 async def on_ready():
-    print(f'Bot {bot.user} is ready!')
+    print(f"Бот {bot.user} запущен и готов!")  # Простой вывод для проверки
+    print(f"Подключен к {len(bot.guilds)} серверам.")  # Вывод количества серверов
+    print(f"Подключен как {bot.user.name}")  # Имя пользователя бота
     await load_cogs()
 
     # Синхронизируем слэш-команды с Discord API

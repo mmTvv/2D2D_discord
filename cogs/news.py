@@ -1,47 +1,44 @@
 import discord
 from discord.ext import commands
+from utils import *
+from groq import Groq
+
+client = Groq(api_key=config['ai']['groq_token'])
 
 class NewsForwarder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.source_channel_id = 123456789012345678  # ID канала me-news
-        self.target_channel_ids = [987654321098765432, 876543210987654321]  # ID каналов news-eng и news-ru
 
     @commands.Cog.listener()
     async def on_message(self, message):
         # Проверяем, что сообщение пришло из канала me-news и не от бота
-        if message.channel.id == self.source_channel_id and not message.author.bot:
-            for channel_id in self.target_channel_ids:
+        if message.channel.id == config['server']['me-news'] and not message.author.bot:
+            for channel_id in [config['server']['news-ru'], config['server']['news-en']]:
                 target_channel = self.bot.get_channel(channel_id)
+                if target_channel.name.replace('news-', '') == 'ru':
+                    prompt = f'''без перевода на другой язык, оставляй пост русским,сам пост: "{message.content}"'''
+                else:
+                    prompt = f'''переведи с ru на язык: {target_channel.name.replace('news-', '')} сам пост: "{message.content}"'''
                 if target_channel:
-                    await target_channel.send(f"**{message.author}**: {message.content}")
-
-    @commands.command(name="set_source")
-    @commands.has_permissions(administrator=True)
-    async def set_source_channel(self, ctx, channel: discord.TextChannel):
-        """Установить канал-источник новостей"""
-        self.source_channel_id = channel.id
-        await ctx.send(f"Канал-источник установлен: {channel.mention}")
-
-    @commands.command(name="add_target")
-    @commands.has_permissions(administrator=True)
-    async def add_target_channel(self, ctx, channel: discord.TextChannel):
-        """Добавить канал, куда будут пересылаться новости"""
-        if channel.id not in self.target_channel_ids:
-            self.target_channel_ids.append(channel.id)
-            await ctx.send(f"Канал {channel.mention} добавлен в список получателей новостей.")
-        else:
-            await ctx.send(f"Канал {channel.mention} уже в списке.")
-
-    @commands.command(name="remove_target")
-    @commands.has_permissions(administrator=True)
-    async def remove_target_channel(self, ctx, channel: discord.TextChannel):
-        """Удалить канал из списка получателей новостей"""
-        if channel.id in self.target_channel_ids:
-            self.target_channel_ids.remove(channel.id)
-            await ctx.send(f"Канал {channel.mention} удалён из списка получателей новостей.")
-        else:
-            await ctx.send(f"Канал {channel.mention} не был в списке.")
+                    completion = client.chat.completions.create(
+                            model="llama-3.1-70b-versatile",
+                            messages=[
+                                {
+                                    "role": "system",
+                                    "content": "Ты редактор сообщества,не трогай жаргонные выражения, можешь использовать иструменты стилизации Mardown,сообщения в квадратных скобочках оставляй как есть, твоя задача редактировать мои посты переписывая их и при запросе переводить их на другой язык, но нужно сохранять мысль сообщения. При необходимости исправлять ошибки. ВАЖНО ОТПРАВЛЯЙ ТОЛЬКО САМ ПОСТ, БОЛЬШЕ НИЧЕГО НЕ ПИШИ"
+                                },
+                                {
+                                    "role": "user",
+                                    "content": prompt
+                                }
+                            ],
+                            temperature=1,
+                            max_tokens=1024,
+                            top_p=1,
+                            stream=False,
+                            stop=None,
+                        )
+                    await target_channel.send(completion.choices[0].message.content)
             
 async def setup(bot):
     await bot.add_cog(NewsForwarder(bot))
